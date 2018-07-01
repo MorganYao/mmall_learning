@@ -20,6 +20,7 @@ public class CookieUtil {
         Cookie ck = new Cookie(COOKIE_NAME,token);
         ck.setDomain(COOKIE_DOMAIN);
         ck.setPath("/");//代表设置为根目录
+        ck.setHttpOnly(true);//禁止脚本访问cookie的信息
 
         //maxage的单位为秒，如果不设置就表示不会写入硬盘而是写在内存上，只在当前页面有效
         //-1表示永久有效
