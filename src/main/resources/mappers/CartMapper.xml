@@ -30,7 +30,7 @@
       quantity, checked, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
-      #{quantity,jdbcType=INTEGER}, #{checked,jdbcType=INTEGER}, now()},
+      #{quantity,jdbcType=INTEGER}, #{checked,jdbcType=INTEGER}, now(),
       now())
   </insert>
   <insert id="insertSelective" parameterType="com.mmall.pojo.Cart" >
@@ -116,4 +116,66 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--Cart selectCartByUserIdProductId(@Param("userId") Integer userId, @Param("productId") Integer productId);-->
+  <select id="selectCartByUserIdProductId" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    from mmall_cart
+    where user_id = #{userId}
+    and product_id = #{productId}
+  </select>
+
+  <!--List<Cart> selectCartByUserId(Integer userId);-->
+  <select id="selectCartByUserId" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List"/>
+    from mmall_cart
+    where user_id=#{userId}
+  </select>
+
+  <!-- int selectCartProductCheckedStatusByUserId(Integer userId);-->
+  <select id="selectCartProductCheckedStatusByUserId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select count(1) from mmall_cart where checked = 0 and user_id = #{userId}
+  </select>
+
+  <!--int deleteByUserIdProductIds(@Param("userId") Integer userId, @Param("productIdList") List<String> productIdList);-->
+  <delete id="deleteByUserIdProductIds" parameterType="map">
+    delete from mmall_cart
+    where user_id = #{userId}
+    <if test="productIdList != null">
+      and product_id in
+      <foreach collection="productIdList" item="item" index="indes" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+
+    </if>
+  </delete>
+
+  <!--int checkedOrUncheckedProduct(@Param("userId") Integer userId, @Param("checked") Integer checked);-->
+  <update id="checkedOrUncheckedProduct" parameterType="map">
+    update mmall_cart
+    set checked = #{checked},
+    update_time = now()
+    where user_id = #{userId}
+    <if test="productId != null">
+      and product_id = #{productId}
+    </if>
+  </update>
+
+  <!--int selectCartProductCount(@Param("userId") Integer userId);-->
+  <select id="selectCartProductCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select IFNULL(sum(quantity),0) as count from mmall_cart where user_id = #{userId}
+  </select>
+
+  <!--List<Cart> selectCheckedCartByUserId(Integer userId);-->
+  <select id="selectCheckedCartByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from mmall_cart
+    where user_id = #{userId}
+    and checked = 1;
+  </select>
+  
+  
 </mapper>
