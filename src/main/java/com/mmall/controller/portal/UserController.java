@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -36,7 +37,7 @@ public class UserController {
      */
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody //将返回结果自动序列化为json
-    public ServiceResponse<User> login(String username, String password, HttpSession session, HttpServletResponse httpServletresponse){
+    public ServiceResponse<User> login(String username, String password, HttpSession session, HttpServletResponse httpServletresponse, HttpServletRequest httpServletRequest){
         //调用service,servce调用mybatis的dao层
         ServiceResponse<User> response = iUserService.login(username,password);
         if (response.isSuccess()){
@@ -44,7 +45,6 @@ public class UserController {
             CookieUtil.writeLoginToken(httpServletresponse,session.getId());
             //session.setAttribute(Const.CURRENT_USER,response.getData());
             //将session保存到redis
-            //7025A64DBDFC8B61B1801100395AE13C
             RedisPoolUtil.setEx(session.getId(),Const.RedisCacheExtime.REDIS_SESSION_EXTIME, JsonUtil.obj2String(response.getData()));
         }
         return response;
