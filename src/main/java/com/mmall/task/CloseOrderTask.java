@@ -35,7 +35,7 @@ public class CloseOrderTask {
             //如果返回值为1,表明设置成功，获取锁
             closeOrder(Const.REDIS_LOCK.CLOSE_ORDER_TASK_LOCK);
         }else{
-            log.info("没有获得分布式锁：{}"，Const.REDIS_LOCK.CLOSE_ORDER_TASK_LOCK);
+            log.info("没有获得分布式锁：{}",Const.REDIS_LOCK.CLOSE_ORDER_TASK_LOCK);
         }
         log.info("关闭订单定时任务结束");
     }
