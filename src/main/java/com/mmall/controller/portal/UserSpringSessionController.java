@@ -39,6 +39,7 @@ public class UserSpringSessionController {
     @RequestMapping(value = "login.do", method = RequestMethod.GET)
     @ResponseBody //将返回结果自动序列化为json
     public ServiceResponse<User> login(String username, String password, HttpSession session,HttpServletResponse httpServletResponse){
+
         //调用service,servce调用mybatis的dao层
         ServiceResponse<User> response = iUserService.login(username,password);
         if (response.isSuccess()){

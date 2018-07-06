@@ -233,4 +233,23 @@
     from mmall_order
     order by create_time desc
   </select>
+
+  <!-- List<Order> selectOrderStatusByCreateTime(@Param("status") Integer status,@Param("date") String date);-->
+  <select id="selectOrderStatusByCreateTime" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    from mmall_order
+    where status = #{status}
+    <![CDATA[
+    and create_time <= #{date}
+    ]]>
+    order by create_time desc
+  </select>
+
+  <!--int closeOrderByOrderId(Integer id);-->
+  <update id="closeOrderByOrderId" parameterType="java.lang.Integer">
+    update mmall_order
+    set status = 0
+    where id = #{id}
+  </update>
 </mapper>

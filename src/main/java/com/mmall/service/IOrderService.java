@@ -19,8 +19,13 @@ public interface IOrderService {
     ServiceResponse getOrderCartProduct(Integer userId);
     ServiceResponse<OrderVo> getOrderDetail(Integer userId, Long orderNo);
     ServiceResponse<PageInfo> getOrderList(Integer userId, int pageNum, int pageSize);
+
+    //backend
     ServiceResponse<PageInfo> manageList(int pageNum, int pageSize);
     ServiceResponse<OrderVo> manageDetail(Long orderNo);
     ServiceResponse<PageInfo> manageSearch(Long orderNo,int pageNum,int pageSize);
     ServiceResponse<String> manageSendGoods(Long orderNo);
+
+    //hour个小时内未付款的订单将被关闭
+    void closeOrder(int hour);
 }
